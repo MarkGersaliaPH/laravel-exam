@@ -88,14 +88,28 @@ function Form({ auth, item, difficulty_options, question_options }) {
 
     const handleDrop = (item) => {
         // questionList.filter((question)=>question.id != item)
+        addAndRemoveSelected(item)
+    };
+
+    const addAndRemoveSelected = (item) =>{
 
         setQuestionList((prev) => {
             return prev.filter((question) => question.id != item.id);
         });
 
         setSelectedQuestions((prevQuestions) => [...prevQuestions, item]);
-    };
+    }
 
+    const removeSelected = (item) =>{
+        
+        setSelectedQuestions((prev) => {
+            return prev.filter((question) => question.id != item.id);
+        });
+
+        setQuestionList((prevQuestions) => [...prevQuestions, item]);
+
+
+    }
     return (
         <div>
             <AuthenticatedLayout
@@ -131,12 +145,13 @@ function Form({ auth, item, difficulty_options, question_options }) {
 
                                             <DndProvider backend={HTML5Backend}>
                                                 <p className="font-bold mb-2">
-                                                    Questions List:
+                                                    Questions List (Drag or click the button to select):
                                                 </p>
                                                 <div className="grid grid-cols-4 gap-4">
                                                     {questionList.map(
                                                         (item) => (
                                                             <DragCard
+                                                                onAddToSelected={addAndRemoveSelected}
                                                                 key={item.id}
                                                                 item={item}
                                                             />
@@ -146,6 +161,7 @@ function Form({ auth, item, difficulty_options, question_options }) {
                                                 <DropArea
                                                     data={selectedQuestions}
                                                     handleDrop={handleDrop}
+                                                    removeSelected={removeSelected}
                                                 />
                                             </DndProvider>
                                         </form>
