@@ -10,6 +10,7 @@ import Card, {
   CardBody,
   CardFooter,
 } from "@/Components/Card";
+import DynamicForm from "@/Components/DynamicForm";
 
 
 function Form({ auth, item }) {
@@ -24,7 +25,7 @@ function Form({ auth, item }) {
     recentlySuccessful,
   } = useForm(item || {});
 
-  const baseUrl = "questions";
+  const baseUrl = "admin.programming-langguage";
 
   const submit = (e) => {
     e.preventDefault();
@@ -45,17 +46,27 @@ function Form({ auth, item }) {
   const handleChange = (e) => {
     setData(e.target.name, e.target.value);
   };
+
+  const inputs = [ 
+    {
+        type: "text",
+        name: "name",
+        label: "Name",
+        handleChange: handleChange,
+    }, 
+];
+
   return (
     <div>
       <AuthenticatedLayout
         user={auth.user}
         header={
           <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-            Questions
+            Programming Langguage
           </h2>
         }
       >
-        <Head title="Questions Form" />
+        <Head title="Programming Langguage Form" />
 
 
         <div className="py-5">
@@ -68,27 +79,13 @@ function Form({ auth, item }) {
                                             onSubmit={submit}
                                             className="mt-6 space-y-6"
                                         >
-                                            <div>
-                                                <InputLabel
-                                                    htmlFor="name"
-                                                    value="Name"
-                                                />
-                                                <TextInput
-                                                    name="name"
-                                                    id="name"
-                                                    className="mt-1 block w-full"
-                                                    value={data.name}
-                                                    onChange={handleChange}
-                                                    required
-                                                    isFocused
-                                                    autoComplete="name"
-                                                    type="text"
-                                                />
-                                                <InputError
-                                                    className="mt-2"
-                                                    message={errors.name}
-                                                />
-                                            </div> 
+                                          
+                                          <DynamicForm
+                                                inputs={inputs}
+                                                data={data}
+                                                handleChange={handleChange}
+                                                errors={errors}
+                                            />
                                         </form>
                                     </CardBody>
                                     <CardFooter>

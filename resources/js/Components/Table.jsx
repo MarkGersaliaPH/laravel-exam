@@ -78,7 +78,7 @@ function Table({ headers, body, actions, additional_action, fromNumber = 1 }) {
                                 ))}
 
                                 {actions && (
-                                    <td className="px-6 py-3 align-middle bg-transparent dark:border-white/40 whitespace-nowrap shadow-transparent gap-2 flex">
+                                    <td className="px-6 py-3  align-middle bg-transparent dark:border-white/40 whitespace-nowrap shadow-transparent gap-2 flex">
                                         {actions.show && (
                                             <SecondaryButton
                                                 href={route(

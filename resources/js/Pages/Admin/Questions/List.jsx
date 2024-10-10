@@ -7,16 +7,24 @@ import Pagination from "@/Components/Pagination";
 
 function List({ auth, items }) {
     const baseUrl = "admin.questions";
-    const tableHeader = ["Question","Difficutly", "Created"];
+    const tableHeader = ["Question","Langguage","Difficutly","Type", "Created"];
     const tableBody = items.data.map((data) => ({
         id: data.id, // the user's ID
-        data: [data.text,data.difficulty, data.created_at],
+        data: [
+            <span className="text-wrap">{data.text}</span>,
+            data.langguage_display,
+            data.difficulty_display,
+            data.type_display, 
+            data.created_at
+        ],
     }));
 
     const actions = {
         destroy: `${baseUrl}.destroy`,
         edit: `${baseUrl}.edit`,
     };
+
+    console.log(items)
 
     return (
         <div>

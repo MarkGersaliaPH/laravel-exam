@@ -18,8 +18,9 @@ export default forwardRef(function TextInput({ type = 'text', className = '', is
                 className
             }
             ref={input}
-            rows={5}
+            rows={2}
         >
+            
             {props.value}
             </textarea>
     );

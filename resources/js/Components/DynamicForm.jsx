@@ -7,21 +7,7 @@ import Select from "./Select";
 
 export default function DynamicForm({ inputs, handleChange, data, errors }) {
     const Inputs = (input) => {
-        if (input.type === "text") {
-            return (
-                <TextInput
-                    name={input.name}
-                    id={input.name}
-                    className="mt-1 block w-full"
-                    value={data[input.name]}
-                    onChange={(e)=>input.handleChange(e)}
-                    required
-                    isFocused
-                    autoComplete={input.name}
-                    type="text"
-                />
-            );
-        }
+      
         
         if (input.type === "select") {
             return (
@@ -55,10 +41,21 @@ export default function DynamicForm({ inputs, handleChange, data, errors }) {
                 />
             );
         }
-
-        
-        // Add more conditions if there are other input types (e.g., "number", "email", etc.)
-        return null; // Return null if the type doesn't match.
+ 
+            return (
+                <TextInput
+                type={input.type}
+                    name={input.name}
+                    id={input.name}
+                    className="mt-1 block w-full"
+                    value={data[input.name]}
+                    onChange={(e)=>input.handleChange(e)}
+                    required
+                    isFocused
+                    autoComplete={input.name}
+                />
+            )
+            ; 
     };
 
 

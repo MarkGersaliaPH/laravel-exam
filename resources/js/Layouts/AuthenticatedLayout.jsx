@@ -13,6 +13,8 @@ export default function Authenticated({ user, header, children }) {
         { name: "dashboard", route: "dashboard" },
         { name: "questions", route: "admin.questions.index" },
         { name: "categories", route: "admin.categories.index" },
+        { name: "programming langguage", route: "admin.programming-langguage.index" },
+        { name: "exams", route: "admin.exams.index" },
     ];
 
     return (
@@ -26,7 +28,6 @@ export default function Authenticated({ user, header, children }) {
                                     <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
                                 </Link>
                             </div>
-
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 {navs.map((item, key) => (
                                     <NavLink
@@ -139,7 +140,7 @@ export default function Authenticated({ user, header, children }) {
                             href={route("dashboard")}
                             active={route().current("dashboard")}
                         >
-                            Dashboard
+                            Dashboard 
                         </ResponsiveNavLink>
                     </div>
 
@@ -172,6 +173,7 @@ export default function Authenticated({ user, header, children }) {
             {header && (
                 <header className="bg-white dark:bg-gray-800 shadow">
                     <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                         
                         {header}
                     </div>
                 </header>

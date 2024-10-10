@@ -23,7 +23,7 @@ export default forwardRef(function TextInput({ type = 'text', className = '', is
             {
                 options && options.map((option,key)=>
                     <option value={option.id}>
-                        {option.text}
+                        {option.text || option.name}
                     </option>
                 )
             }

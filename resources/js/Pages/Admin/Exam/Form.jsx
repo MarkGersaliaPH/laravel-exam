@@ -8,12 +8,12 @@ import InputLabel from "@/Components/InputLabel";
 import SecondaryButton from "@/Components/SecondaryButton";
 import Card, { CardBody, CardFooter } from "@/Components/Card";
 import DynamicForm from "@/Components/DynamicForm";
-import OptionsArea from "@/Components/OptionsArea";
-import { dificuty_options, labelArr } from "@/Components/data_list";
-import TextArea from "@/Components/TextArea";
-import CodeEditor from "@uiw/react-textarea-code-editor/nohighlight";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import DragCard from "@/Components/DragCard";
+import DropArea from "@/Components/DropArea";
 
-function Form({ auth, item, difficulty_options, type_options, programming_langguage_options }) { 
+function Form({ auth, item, difficulty_options, question_options }) {
     const {
         data,
         setData,
@@ -24,23 +24,11 @@ function Form({ auth, item, difficulty_options, type_options, programming_langgu
         processing,
         recentlySuccessful,
     } = useForm(item || {});
- 
-    const baseUrl = "admin.questions";
+
+    const baseUrl = "admin.exams";
 
     const submit = (e) => {
         e.preventDefault();
-        const correct_answer = options.find(
-            (option) => option.is_correct == true
-        ); 
-
-        if (data.type == 1) {
-            data.correct_answer = `${correct_answer.label}). ${correct_answer.text}`;
-            data.options = options;
-        }
-
-        if (data.type == 2) {
-            data.correct_answer = code;
-        }
 
         if (data.id) {
             put(route(`${baseUrl}.update`, data.id), {
@@ -68,132 +56,44 @@ function Form({ auth, item, difficulty_options, type_options, programming_langgu
             options: difficulty_options,
         },
         {
-            type: "select",
-            name: "programming_langguage_id",
-            label: "Programming Langguage",
+            type: "text",
+            name: "name",
+            label: "Name",
             handleChange: handleChange,
-            options: programming_langguage_options,
         },
         {
-            type: "select",
-            name: "type",
-            label: "Type",
+            type: "number",
+            name: "time_limit",
+            label: "Time Limit (Minutes)",
             handleChange: handleChange,
-            options: type_options,
         },
         {
             type: "textarea",
-            name: "text",
-            label: "Question",
+            name: "description",
+            label: "Description",
             handleChange: handleChange,
         },
     ];
 
-    const handleOptions = (e, key) => {
-        //Remove all the check
-        if (e.target.type == "checkbox") {
-            setOptions((prevOptions) => {
-                const updatedOptions = prevOptions.map((option, index) => ({
-                    ...option,
-                    is_correct: false,
-                }));
-                return updatedOptions;
-            });
-        }
-        setOptions((prevOptions) => {
-            // Create a copy of the previous options array
-            const updatedOptions = [...prevOptions];
-
-            // Check if the input type is radio or something else (like text or checkbox)
-            const valueToUpdate =
-                e.target.type === "text" ? e.target.value : e.target.checked;
-
-            // Update the specific option at the 'key' index
-            updatedOptions[key] = {
-                ...updatedOptions[key], // Spread the existing properties of that option
-                [e.target.name]: valueToUpdate, // Update the 'text' property with the new value
-            };
-
-            return updatedOptions; // Return the updated array
-        });
-    };
-
-    let [options, setOptions] = useState([
-        { label: "A", text: "", is_correct: "" },
-    ]);
-
-    useEffect(() => {
-        setOptions(
-            data.id
-                ? data.options
-                : [
-                      { label: "A", text: "", is_correct: "" },
-                      { label: "B", text: "", is_correct: "" },
-                      { label: "C", text: "", is_correct: "" },
-                      { label: "D", text: "", is_correct: "" },
-                  ]
-        );
-    }, []);
-
-    const addOptionsRow = () => {
-        // if(options.length < 4){
-        setOptions((options) => [
-            ...options,
-            { label: getLabel(options.length), text: "", is_correct: "" },
-        ]);
-        // }
-    };
-
-    const removeOptionRow = (key) => {
-        let newOptions = options.filter((__, index) => index != key);
-        setOptions(newOptions);
-    };
-
-    const getLabel = (length) => {
-        return labelArr[length];
-    };
-
-    const [code, setCode] = useState(
-        data.correct_answer
-            ? data.correct_answer
-            : `function add(a, b) {\n  return a + b;\n}`
+    let [questionList, setQuestionList] = useState(
+        question_options || [
+            { id: 1, text: "Laravel 1" },
+            { id: 2, text: "Laravel 2" },
+            { id: 3, text: "Laravel 3" },
+            { id: 4, text: "Laravel 4" },
+        ]
     );
 
-    const displayAnswers = () => {
-        if (!data.type) {
-            return null;
-        }
+    const [selectedQuestions, setSelectedQuestions] = useState([]); // Initialize with an empty array
 
-        if (data.type == 1) {
-            return (
-                <OptionsArea
-                    addOptionsRow={addOptionsRow}
-                    options={options}
-                    handleOptions={handleOptions}
-                    removeOptionRow={removeOptionRow}
-                />
-            );
-        }
+    const handleDrop = (item) => {
+        // questionList.filter((question)=>question.id != item)
 
-        if (data.type == 2) {
-            return <>
-            Expected Output:
-                <CodeEditor
-                    value={code}
-                    language="php"
-                    placeholder="Enter Code."
-                    onChange={(evn) => setCode(evn.target.value)}
-                    padding={15}
-                    style={{
-                        marginTop:"10px",
-                        backgroundColor: "#333",
-                        color:"#fff",
-                        fontFamily:
-                            "ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace",
-                    }}
-                />
-            </>;
-        }
+        setQuestionList((prev) => {
+            return prev.filter((question) => question.id != item.id);
+        });
+
+        setSelectedQuestions((prevQuestions) => [...prevQuestions, item]);
     };
 
     return (
@@ -202,11 +102,11 @@ function Form({ auth, item, difficulty_options, type_options, programming_langgu
                 user={auth.user}
                 header={
                     <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                        Questions
+                        Exam
                     </h2>
                 }
             >
-                <Head title="Questions Form" />
+                <Head title="Exam Form" />
 
                 <div className="py-5">
                     <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -228,20 +128,26 @@ function Form({ auth, item, difficulty_options, type_options, programming_langgu
                                                 handleChange={handleChange}
                                                 errors={errors}
                                             />
-                                            <div>
-                                                {data.type == 1 &&  (
-                                                    <p>
-                                                        Correct Answer:{" "}
-                                                        <br></br>
-                                                        <span className="font-extrabold text-green-500">
-                                                            {
-                                                                data.correct_answer
-                                                            }
-                                                        </span>
-                                                    </p>
-                                                )}
-                                            </div>
-                                            {displayAnswers()}
+
+                                            <DndProvider backend={HTML5Backend}>
+                                                <p className="font-bold mb-2">
+                                                    Questions List:
+                                                </p>
+                                                <div className="grid grid-cols-4 gap-4">
+                                                    {questionList.map(
+                                                        (item) => (
+                                                            <DragCard
+                                                                key={item.id}
+                                                                item={item}
+                                                            />
+                                                        )
+                                                    )}
+                                                </div>
+                                                <DropArea
+                                                    data={selectedQuestions}
+                                                    handleDrop={handleDrop}
+                                                />
+                                            </DndProvider>
                                         </form>
                                     </CardBody>
                                     <CardFooter>
