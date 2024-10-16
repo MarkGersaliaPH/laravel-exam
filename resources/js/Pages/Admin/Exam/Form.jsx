@@ -12,6 +12,9 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import DragCard from "@/Components/DragCard";
 import DropArea from "@/Components/DropArea";
+import QuestionPicker from "./QuestionPicker";
+import Modal from "@/Components/Modal";
+import Modal2 from "@/Components/Modal2";
 
 function Form({ auth, item, difficulty_options, question_options }) {
     const {
@@ -44,7 +47,13 @@ function Form({ auth, item, difficulty_options, question_options }) {
     };
 
     const handleChange = (e) => {
-        setData(e.target.name, e.target.value);
+        let name = e.target.name;
+        let value = e.target.value;
+
+        setData(name, value);
+        if (e.target.name == "difficulty") {
+            filterQuestions({ [name]: value });
+        }
     };
 
     const inputs = [
@@ -88,28 +97,31 @@ function Form({ auth, item, difficulty_options, question_options }) {
 
     const handleDrop = (item) => {
         // questionList.filter((question)=>question.id != item)
-        addAndRemoveSelected(item)
+        addAndRemoveSelected(item);
     };
 
-    const addAndRemoveSelected = (item) =>{
-
+    const addAndRemoveSelected = (item) => {
         setQuestionList((prev) => {
             return prev.filter((question) => question.id != item.id);
         });
 
         setSelectedQuestions((prevQuestions) => [...prevQuestions, item]);
-    }
+    };
 
-    const removeSelected = (item) =>{
-        
+    const removeSelected = (item) => {
         setSelectedQuestions((prev) => {
             return prev.filter((question) => question.id != item.id);
         });
 
         setQuestionList((prevQuestions) => [...prevQuestions, item]);
+    };
 
+    const filterQuestions = (filter) => {
+        console.log(data.difficulty);
+        console.log(filter);
+    };
 
-    }
+    const [showModal, setShowModal] = useState(false);
     return (
         <div>
             <AuthenticatedLayout
@@ -143,27 +155,14 @@ function Form({ auth, item, difficulty_options, question_options }) {
                                                 errors={errors}
                                             />
 
-                                            <DndProvider backend={HTML5Backend}>
-                                                <p className="font-bold mb-2">
-                                                    Questions List (Drag or click the button to select):
-                                                </p>
-                                                <div className="grid grid-cols-4 gap-4">
-                                                    {questionList.map(
-                                                        (item) => (
-                                                            <DragCard
-                                                                onAddToSelected={addAndRemoveSelected}
-                                                                key={item.id}
-                                                                item={item}
-                                                            />
-                                                        )
-                                                    )}
-                                                </div>
-                                                <DropArea
-                                                    data={selectedQuestions}
-                                                    handleDrop={handleDrop}
-                                                    removeSelected={removeSelected}
-                                                />
-                                            </DndProvider>
+                                            <PrimaryButton
+                                                type="button"
+                                                onClick={()=>setShowModal(
+                                                    !showModal
+                                                )}
+                                            >
+                                                Add questions
+                                            </PrimaryButton>
                                         </form>
                                     </CardBody>
                                     <CardFooter>
@@ -215,6 +214,16 @@ function Form({ auth, item, difficulty_options, question_options }) {
                         </div>
                     </div>
                 </div>
+                <Modal2 show={showModal} title="Questions List (Drag or click the button to select):">
+                     
+                    <QuestionPicker
+                        questionList={questionList}
+                        addAndRemoveSelected={addAndRemoveSelected}
+                        selectedQuestions={selectedQuestions}
+                        handleDrop={handleDrop}
+                        removeSelected={removeSelected}
+                    />
+                </Modal2>
             </AuthenticatedLayout>
         </div>
     );

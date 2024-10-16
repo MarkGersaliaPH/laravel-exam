@@ -81,6 +81,14 @@ function Form({ auth, item, difficulty_options, type_options, programming_langgu
             handleChange: handleChange,
             options: type_options,
         },
+        
+        {
+            type: "select2",
+            name: "tags",
+            label: "Tags",
+            handleChange: handleChange,
+            options: type_options,
+        },
         {
             type: "textarea",
             name: "text",

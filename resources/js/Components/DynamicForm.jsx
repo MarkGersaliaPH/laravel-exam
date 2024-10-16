@@ -4,6 +4,7 @@ import TextInput from "./TextInput";
 import InputError from "./InputError";
 import TextArea from "./TextArea";
 import Select from "./Select";
+import Select2 from "./Select2";
 
 export default function DynamicForm({ inputs, handleChange, data, errors }) {
     const Inputs = (input) => {
@@ -22,6 +23,24 @@ export default function DynamicForm({ inputs, handleChange, data, errors }) {
                     autoComplete={input.name}
                     type="text"
                     options={input.options}
+                />
+            );
+        }
+        if (input.type === "select2") {
+            return (
+                <Select2
+                    name={input.name}
+                    id={input.name}
+                    className="mt-1 block w-full"
+                    value={data[input.name]}
+                    // onChange={(e)=>input.handleChange(e)}
+                    required
+                    isFocused
+                    autoComplete={input.name}
+                    type="text"
+                    options={input.options}
+                    isMulti={true}
+                    creatable={true}
                 />
             );
         }

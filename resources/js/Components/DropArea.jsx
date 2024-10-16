@@ -14,7 +14,7 @@ export default function DropArea({ handleDrop, data, removeSelected }) {
     return (
         <div
             ref={drop}
-            className="w-full bg-gray-100 p-5 rounded-lg border border-gray-300"
+            className="w-full bg-gray-100 p-3 rounded-lg border border-gray-300"
         >
             <span className="mb-5">Selected Questions ({data.length}):</span>
             <div className="grid grid-cols-4 gap-4 mt-3">

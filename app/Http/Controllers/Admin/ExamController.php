@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Admin;;
 
 use App\Enums\Question\Difficulty;
+use App\Enums\Question\Type;
 use App\Models\Question;
 use Inertia\Inertia;
 use Markgersaliaph\LaravelCrudGenerate\Http\Controllers\CrudController;
@@ -18,6 +19,7 @@ class ExamController extends CrudController
         $data = [ 
             'difficulty_options' => Difficulty::options(), 
             'question_options' => Question::All(), 
+            'type_options' => Type::cases(), 
         ];  
         return $data; 
     }
