@@ -13,7 +13,7 @@ import { dificuty_options, labelArr } from "@/Components/data_list";
 import TextArea from "@/Components/TextArea";
 import CodeEditor from "@uiw/react-textarea-code-editor/nohighlight";
 
-function Form({ auth, item, difficulty_options, type_options, programming_langguage_options }) { 
+function Form({ auth, item, difficulty_options, type_options, programming_langguage_options,tag_options }) { 
     const {
         data,
         setData,
@@ -26,6 +26,8 @@ function Form({ auth, item, difficulty_options, type_options, programming_langgu
     } = useForm(item || {});
  
     const baseUrl = "admin.questions";
+
+    let [selectedTags,setSelectedTags] = useState(data.display_tags || []);
 
     const submit = (e) => {
         e.preventDefault();
@@ -42,6 +44,11 @@ function Form({ auth, item, difficulty_options, type_options, programming_langgu
             data.correct_answer = code;
         }
 
+        if(selectedTags.length){
+            data.tags = selectedTags;
+        }
+ 
+ 
         if (data.id) {
             put(route(`${baseUrl}.update`, data.id), {
                 preserveScroll: true,
@@ -54,10 +61,15 @@ function Form({ auth, item, difficulty_options, type_options, programming_langgu
             });
         }
     };
-
+ 
     const handleChange = (e) => {
         setData(e.target.name, e.target.value);
     };
+ 
+
+    const handeChangeTag = (tag_options) =>{
+        setSelectedTags(tag_options)
+    }
 
     const inputs = [
         {
@@ -84,10 +96,11 @@ function Form({ auth, item, difficulty_options, type_options, programming_langgu
         
         {
             type: "select2",
-            name: "tags",
+            name: "display_tags",
             label: "Tags",
-            handleChange: handleChange,
-            options: type_options,
+            handleChange: handeChangeTag,
+            value:selectedTags,
+            options: tag_options,
         },
         {
             type: "textarea",

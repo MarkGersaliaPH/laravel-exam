@@ -2,7 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-
-input[type='text']:focus{
-    border: none !important;
+input:focus {
+--tw-ring-color:transparent !important;    
+border-color:transparent !important;    
+box-shadow:none !important;    
 }

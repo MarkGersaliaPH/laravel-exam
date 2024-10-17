@@ -17,10 +17,10 @@ export default function DropArea({ handleDrop, data, removeSelected }) {
             className="w-full bg-gray-100 p-3 rounded-lg border border-gray-300"
         >
             <span className="mb-5">Selected Questions ({data.length}):</span>
-            <div className="grid grid-cols-4 gap-4 mt-3">
+            <div>
                 {data.map((item, key) => (
-                    <div className="relative">
-                    <SimpleCard>
+                    <div className="relative mb-2">
+                    <SimpleCard className="mb-2">
                         <div className="mb-2">
                             <span className="font-semibold text-lg line-clamp-2 text-gray-800">
                                 {item.text}

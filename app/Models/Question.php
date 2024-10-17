@@ -6,10 +6,12 @@ use App\Enums\Question\Difficulty;
 use App\Enums\Question\Type;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Tags\HasTags;
 
 class Question extends Model
 {
     use HasFactory;
+    use HasTags;
 
     protected $fillable = ['text', 'type', 'category_id', 'difficulty', 'programming_langguage_id', 'correct_answer'];
 
@@ -22,7 +24,7 @@ class Question extends Model
     ];
 
     // Append the custom 'type' attribute to the model's array form
-    protected $appends = ['type_display', 'difficulty_display','langguage_display'];
+    protected $appends = ['type_display', 'difficulty_display','langguage_display','display_tags'];
 
     public function getTypeDisplayAttribute()
     {
@@ -65,5 +67,15 @@ class Question extends Model
     public function programming_langguage()
     {
         return $this->belongsTo(QuestionProgrammingLangguage::class,'programming_langguage_id')->withDefault();
+    }
+
+    public function getDisplayTagsAttribute(){
+        $tagArr = [];
+        foreach ($this->tags as $key => $tag) {
+            array_push($tagArr,["value"=>$tag->slug,"label"=>$tag->name]);
+        } 
+
+        return $tagArr;
+        
     }
 }

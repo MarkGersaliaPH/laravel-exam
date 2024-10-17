@@ -154,15 +154,17 @@ function Form({ auth, item, difficulty_options, question_options }) {
                                                 handleChange={handleChange}
                                                 errors={errors}
                                             />
-
-                                            <PrimaryButton
-                                                type="button"
-                                                onClick={()=>setShowModal(
-                                                    !showModal
-                                                )}
-                                            >
-                                                Add questions
-                                            </PrimaryButton>
+                                            <QuestionPicker
+                                                questionList={questionList}
+                                                addAndRemoveSelected={
+                                                    addAndRemoveSelected
+                                                }
+                                                selectedQuestions={
+                                                    selectedQuestions
+                                                }
+                                                handleDrop={handleDrop}
+                                                removeSelected={removeSelected}
+                                            />
                                         </form>
                                     </CardBody>
                                     <CardFooter>
@@ -214,16 +216,6 @@ function Form({ auth, item, difficulty_options, question_options }) {
                         </div>
                     </div>
                 </div>
-                <Modal2 show={showModal} title="Questions List (Drag or click the button to select):">
-                     
-                    <QuestionPicker
-                        questionList={questionList}
-                        addAndRemoveSelected={addAndRemoveSelected}
-                        selectedQuestions={selectedQuestions}
-                        handleDrop={handleDrop}
-                        removeSelected={removeSelected}
-                    />
-                </Modal2>
             </AuthenticatedLayout>
         </div>
     );

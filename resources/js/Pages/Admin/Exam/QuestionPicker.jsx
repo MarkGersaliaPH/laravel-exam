@@ -33,16 +33,22 @@ export default function QuestionPicker({
         <div className="">
             <DndProvider backend={HTML5Backend}>
                 <div className="flex gap-5">
-                    <div className="w-1/2  h-[400px] overflow-auto">
-                        {questionList.map((item) => (
-                            <DragCard
-                                onAddToSelected={addAndRemoveSelected}
-                                key={item.id}
-                                item={item}
-                            />
-                        ))}
+                    <div className="w-1/2  ">
+                        <span className="mb-5">
+                            Available Questions ({questionList.length}):
+                        </span>
+
+                        <div className="h-[400px] overflow-auto">
+                            {questionList.map((item) => (
+                                <DragCard
+                                    onAddToSelected={addAndRemoveSelected}
+                                    key={item.id}
+                                    item={item}
+                                />
+                            ))}
+                        </div>
                     </div>
-                    <div className="w-1/2">
+                    <div className="w-1/2  h-[400px] overflow-auto ">
                         <DropArea
                             data={selectedQuestions}
                             handleDrop={handleDrop}

@@ -26,14 +26,14 @@ export default function DynamicForm({ inputs, handleChange, data, errors }) {
                 />
             );
         }
-        if (input.type === "select2") {
+        if (input.type === "select2") { 
             return (
                 <Select2
                     name={input.name}
                     id={input.name}
-                    className="mt-1 block w-full"
-                    value={data[input.name]}
-                    // onChange={(e)=>input.handleChange(e)}
+                    className="mt-1 block w-full border-transparent focus:border-transparent focus:ring-0 "
+                    value={input.value || data[input.name]}
+                    onChange={(e)=>input.handleChange(e)}
                     required
                     isFocused
                     autoComplete={input.name}

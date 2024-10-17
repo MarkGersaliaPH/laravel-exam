@@ -23,7 +23,6 @@
         "@uiw/react-textarea-code-editor": "^3.0.2",
         "react-dnd": "^16.0.1",
         "react-dnd-html5-backend": "^16.0.1",
-        "react-select": "^5.8.1",
-        "tailgrids": "^2.2.7"
+        "react-select": "^5.8.1"
     }
 }

@@ -16,7 +16,8 @@ export default function DragCard({ item, onAddToSelected }) {
         []
     );
     return (
-        <span ref={dragRef}>
+        <div ref={dragRef} className="relative mb-2 pr-2">
+            
             <SimpleCard style={{ opacity }}>
                 <div className="mb-2">
                     <span className="font-semibold text-lg line-clamp-2 text-gray-800">
@@ -51,13 +52,13 @@ export default function DragCard({ item, onAddToSelected }) {
 
                 <div>
                     <div
-                        className=" cursor-pointer right-1 text-white bg-green-500 rounded-full"
+                        className="absolute top-2 px-2 cursor-pointer right-3 text-white bg-slate-800 rounded-full"
                         onClick={() => onAddToSelected(item)}
                     >
                         +
                     </div>
                 </div>
             </SimpleCard>
-        </span>
+        </div>
     );
 }
