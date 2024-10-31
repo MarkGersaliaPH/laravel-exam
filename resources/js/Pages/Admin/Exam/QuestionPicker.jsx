@@ -3,9 +3,11 @@ import DangerBadge from "@/Components/Badge";
 import DragCard from "@/Components/DragCard";
 import DragRow from "@/Components/DragRow";
 import DropArea from "@/Components/DropArea";
+import DynamicForm from "@/Components/DynamicForm";
 import SimpleTable from "@/Components/SimpleTable";
 import Table from "@/Components/Table";
 import React from "react";
+import { useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
@@ -15,22 +17,17 @@ export default function QuestionPicker({
     selectedQuestions,
     handleDrop,
     removeSelected,
+    filterData,
+    onChangeFilter,
+    filterInputs
 }) {
-    const tableHeader = ["Name", "Difficulty", "Langguage", "Type", ""];
-    const tableBody = questionList.map((data) => ({
-        id: data.id, // the user's ID
-        data: [
-            data.text,
-            <DragCard
-                onAddToSelected={addAndRemoveSelected}
-                key={data.id}
-                item={data}
-            />,
-        ],
-    }));
-
+      
     return (
         <div className="">
+            <div className="p-5 border-gray-100 border bg-gray-50 rounded mb-5">
+                <h2>Filter Questions</h2>
+                <DynamicForm inputs={filterInputs} data={filterData} errors={[]}  />
+            </div>
             <DndProvider backend={HTML5Backend}>
                 <div className="flex gap-5">
                     <div className="w-1/2  ">

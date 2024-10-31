@@ -57,12 +57,37 @@ class ExamController extends CrudController
 
     public function afterCreate($r){
         
-        $r->questions()->attach(1);
+
+        $this->saveTags($r);
+        $this->syncQuestions($r);
+
         $r;
     }
 
+    public function syncQuestions($r){ 
+        // dd(request()->get('questions'));
+        if(request()->has('questions')){
+            $questionCollection = collect(request()->get('questions'))->pluck('id')->toArray(); 
+            $r->questions()->sync($questionCollection);
+        } 
+    }
+
+    public function afterUpdate($r){
+        $this->saveTags($r); 
+        
+        $this->syncQuestions($r);
+    }
+
     public function eagerLoad(){
-        return ['creator'];
+        return ['creator','tags','questions'];
+    }
+    
+    public function saveTags($resource){
+        
+        if(request()->has('tags')){   
+            $resource->syncTags(collect(request()->tags)->pluck('value')->toArray());
+        }
+        
     }
 }
   

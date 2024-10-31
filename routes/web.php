@@ -33,11 +33,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
 
-require __DIR__.'/auth.php';
- 
+    
 Route::resource('admin/questions',App\Http\Controllers\Admin\QuestionsController::class)->names('admin.questions');
 Route::resource('admin/categories',App\Http\Controllers\Admin\CategoryController::class)->names('admin.categories');
 Route::resource('admin/programming-langguage',App\Http\Controllers\Admin\ProgrammingLangguageController::class)->names('admin.programming-langguage');
 Route::resource('admin/exams',App\Http\Controllers\Admin\ExamController::class)->names('admin.exams');
+});
+
+require __DIR__.'/auth.php';
+ 

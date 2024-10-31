@@ -7,13 +7,14 @@ import Pagination from "@/Components/Pagination";
 
 function List({ auth, items }) {
   const baseUrl = "admin.exams";
-  const tableHeader = ["Name","Description","Difficulty","Created By","Created"]; 
+  const tableHeader = ["Name","Time Limit(Mins)","Difficulty","Items","Created By","Created"]; 
   const tableBody = items.data.map((data) => ({
       id: data.id, // the user's ID
       data: [
-        data.name, 
-        <span className="text-wrap">{data.description}</span>, 
+        data.name,  
+        <span className="text-wrap">{data.time_limit}</span>, 
         data.difficulty_display, 
+        data.questions.length, 
         data.creator.name, 
           data.created_at,  
       ], 

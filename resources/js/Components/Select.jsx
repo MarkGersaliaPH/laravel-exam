@@ -22,7 +22,7 @@ export default forwardRef(function TextInput({ type = 'text', className = '', is
             <option value="" default hidden selected>Select {props.name}</option>
             {
                 options && options.map((option,key)=>
-                    <option value={option.id}>
+                    <option key={key} value={option.id}>
                         {option.text || option.name}
                     </option>
                 )

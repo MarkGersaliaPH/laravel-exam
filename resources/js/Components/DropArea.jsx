@@ -1,6 +1,7 @@
 import { useDrop } from "react-dnd";
 import SimpleCard from "./SimpleCard";
 import DangerButton from "./DangerButton";
+import QuestionCard from "./QuestionCard";
 
 export default function DropArea({ handleDrop, data, removeSelected }) {
     const [collectedProps, drop] = useDrop(() => ({
@@ -19,34 +20,8 @@ export default function DropArea({ handleDrop, data, removeSelected }) {
             <span className="mb-5">Selected Questions ({data.length}):</span>
             <div>
                 {data.map((item, key) => (
-                    <div className="relative mb-2">
-                    <SimpleCard className="mb-2">
-                        <div className="mb-2">
-                            <span className="font-semibold text-lg line-clamp-2 text-gray-800">
-                                {item.text}
-                            </span>
-                        </div>
+                    <QuestionCard item={item} key={key} action={removeSelected} isDrag={false} /> 
 
-                        <div className="text-sm text-gray-600">
-                            <div>
-                                <span className="font-medium">Difficulty:</span>{" "}
-                                {item.difficulty_display}
-                            </div>
-                            <div>
-                                <span className="font-medium">Language:</span>{" "}
-                                {item.langguage_display}
-                            </div>
-                        </div>
-                        <div>
-                            <div 
-                                className="absolute top-1 cursor-pointer right-1 px-3 py-1 text-white bg-red-500 rounded-full"
-                                onClick={() => removeSelected(item)}
-                            >
-                                x
-                            </div>
-                        </div>
-                    </SimpleCard>
-                    </div>
                 ))}
             </div>
         </div>

@@ -31,6 +31,7 @@ export default function Authenticated({ user, header, children }) {
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 {navs.map((item, key) => (
                                     <NavLink
+                                        key={key}
                                         href={route(item.route)}
                                         active={route().current(item.name)}
                                         className="capitalize"

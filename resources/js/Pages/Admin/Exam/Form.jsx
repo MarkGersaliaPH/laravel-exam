@@ -15,8 +15,10 @@ import DropArea from "@/Components/DropArea";
 import QuestionPicker from "./QuestionPicker";
 import Modal from "@/Components/Modal";
 import Modal2 from "@/Components/Modal2";
+import axios from "axios";
 
-function Form({ auth, item, difficulty_options, question_options }) {
+function Form({ auth, item, difficulty_options }) {
+    console.log(item);
     const {
         data,
         setData,
@@ -33,6 +35,13 @@ function Form({ auth, item, difficulty_options, question_options }) {
     const submit = (e) => {
         e.preventDefault();
 
+        data.questions = selectedQuestions;
+        
+
+        if(selectedTags.length){
+            data.tags = selectedTags;
+        }
+  
         if (data.id) {
             put(route(`${baseUrl}.update`, data.id), {
                 preserveScroll: true,
@@ -46,17 +55,41 @@ function Form({ auth, item, difficulty_options, question_options }) {
         }
     };
 
+    let [questionOptions, setQuestionOptions] = useState([]);
+
+    const [filterData, setFilterData] = useState({});
+    const [tagOptions, setTagOptions] = useState([]);
+    const [selectedTags, setSelectedTags] = useState(data.display_tags || []);
+
     const handleChange = (e) => {
         let name = e.target.name;
         let value = e.target.value;
 
         setData(name, value);
         if (e.target.name == "difficulty") {
-            filterQuestions({ [name]: value });
+            setFilterData((prevData) => ({
+                ...prevData,
+                [e.target.name]: e.target.value,
+            }));
         }
     };
 
+    const handeChangeTag = (tag_options) => {
+        setSelectedTags(tag_options);
+        let updatedData = { ...filterData };
+        updatedData["tags"] = tag_options;
+        setFilterData(updatedData);
+    };
+
     const inputs = [
+        {
+            type: "select2",
+            name: "tags",
+            label: "Tags",
+            options: tagOptions,
+            value: selectedTags,
+            handleChange: handeChangeTag,
+        },
         {
             type: "select",
             name: "difficulty",
@@ -84,16 +117,11 @@ function Form({ auth, item, difficulty_options, question_options }) {
         },
     ];
 
-    let [questionList, setQuestionList] = useState(
-        question_options || [
-            { id: 1, text: "Laravel 1" },
-            { id: 2, text: "Laravel 2" },
-            { id: 3, text: "Laravel 3" },
-            { id: 4, text: "Laravel 4" },
-        ]
-    );
+    let [questionList, setQuestionList] = useState([]);
 
-    const [selectedQuestions, setSelectedQuestions] = useState([]); // Initialize with an empty array
+    const [selectedQuestions, setSelectedQuestions] = useState(
+        item.questions || []
+    ); // Initialize with an empty array
 
     const handleDrop = (item) => {
         // questionList.filter((question)=>question.id != item)
@@ -116,12 +144,61 @@ function Form({ auth, item, difficulty_options, question_options }) {
         setQuestionList((prevQuestions) => [...prevQuestions, item]);
     };
 
-    const filterQuestions = (filter) => {
-        console.log(data.difficulty);
-        console.log(filter);
+    const [showModal, setShowModal] = useState(false);
+
+    useEffect(() => {
+        const fetchQuestions = async () => {
+            try {
+                const { data } = await axios.get(route("api.get-questions"), {
+                    params: filterData,
+                });
+
+                //This logic will exclude the data of questions list to the selected questions
+                if(selectedQuestions){
+                    setQuestionList(
+                         data.filter(
+                            (prev) => !selectedQuestions.some((selected) => selected.id === prev.id)
+                        )
+                    );
+                }else{
+                    setQuestionList(data);
+
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        const fetchTagOptions = async () => {
+            try {
+                const { data } = await axios.get(route("api.get-tags"));
+                setTagOptions(data);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        fetchQuestions();
+        fetchTagOptions();
+        // Make a request for a user with a given ID
+        // getQuestions()
+    }, [filterData]);
+  
+
+    const onChangeFilter = (e) => {
+        let updatedData = { ...filterData };
+        updatedData[e.target.name] = e.target.value;
+        setFilterData(updatedData);
     };
 
-    const [showModal, setShowModal] = useState(false);
+    const filterInputs = [
+        {
+            type: "text",
+            name: "text",
+            label: "Name",
+            handleChange: onChangeFilter,
+        },
+    ]; 
     return (
         <div>
             <AuthenticatedLayout
@@ -133,14 +210,9 @@ function Form({ auth, item, difficulty_options, question_options }) {
                 }
             >
                 <Head title="Exam Form" />
-
                 <div className="py-5">
                     <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                        <div
-                            className={`grid grid-cols-1 ${
-                                data.id && "md:grid-cols-3"
-                            } gap-4`}
-                        >
+                        <div>
                             <div className="col-span-1 md:col-span-2">
                                 <Card className="mb-5">
                                     <CardBody>
@@ -155,6 +227,9 @@ function Form({ auth, item, difficulty_options, question_options }) {
                                                 errors={errors}
                                             />
                                             <QuestionPicker
+                                                filterData={filterData}
+                                                onChangeFilter={onChangeFilter}
+                                                filterInputs={filterInputs}
                                                 questionList={questionList}
                                                 addAndRemoveSelected={
                                                     addAndRemoveSelected
@@ -186,33 +261,6 @@ function Form({ auth, item, difficulty_options, question_options }) {
                                     </CardFooter>
                                 </Card>
                             </div>
-
-                            {data.id && (
-                                <div className="col-span-1 md:col-span-1">
-                                    <Card>
-                                        <CardBody>
-                                            <table className="w-full">
-                                                <tr>
-                                                    <th className="p-2 text-left">
-                                                        Created at
-                                                    </th>
-                                                    <td className="p-2">
-                                                        {data.created_at}
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th className="p-2 text-left">
-                                                        Last Updated{" "}
-                                                    </th>
-                                                    <td className="p-2">
-                                                        {data.updated_at}
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </CardBody>
-                                    </Card>
-                                </div>
-                            )}
                         </div>
                     </div>
                 </div>

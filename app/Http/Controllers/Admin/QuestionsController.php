@@ -1,6 +1,7 @@
 <?php 
 namespace App\Http\Controllers\Admin;
 
+use App\CustomTag;
 use App\Enums\Question\Difficulty;
 use App\Enums\Question\Type; 
 use App\Models\QuestionProgrammingLangguage;
@@ -16,6 +17,7 @@ class QuestionsController extends CrudController
 
     protected $inertiaMainPage = 'Admin/Questions/List'; //name of react path to display
     protected $inertiaFormPage = 'Admin/Questions/Form'; 
+    protected $perPage =100;
 
 
     private function getDataToBePassed(){
@@ -23,7 +25,7 @@ class QuestionsController extends CrudController
             'type_options' => Type::options(),
             'difficulty_options' => Difficulty::options(),
             'programming_langguage_options' => QuestionProgrammingLangguage::All(),
-            'tag_options' => $this->processTags(),
+            'tag_options' => CustomTag::getTagsToArray(),
         ];  
         return $data;
 

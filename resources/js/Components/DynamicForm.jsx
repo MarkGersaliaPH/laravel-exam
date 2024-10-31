@@ -6,7 +6,7 @@ import TextArea from "./TextArea";
 import Select from "./Select";
 import Select2 from "./Select2";
 
-export default function DynamicForm({ inputs, handleChange, data, errors }) {
+export default function DynamicForm({ inputs, data, errors }) { 
     const Inputs = (input) => {
       
         
