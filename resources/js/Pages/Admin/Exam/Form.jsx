@@ -66,12 +66,14 @@ function Form({ auth, item, difficulty_options }) {
         let value = e.target.value;
 
         setData(name, value);
-        if (e.target.name == "difficulty") {
-            setFilterData((prevData) => ({
-                ...prevData,
-                [e.target.name]: e.target.value,
-            }));
-        }
+
+        
+        // if (e.target.name == "difficulty") {
+        //     setFilterData((prevData) => ({
+        //         ...prevData,
+        //         [e.target.name]: e.target.value,
+        //     }));
+        // }
     };
 
     const handeChangeTag = (tag_options) => {
